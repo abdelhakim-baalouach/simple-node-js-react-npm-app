@@ -4,9 +4,6 @@ pipeline {
         NEW_VERSION = '1.3.0'
         SERVER_CREDENTIALS = credentials('nexus-credentials')
     }
-    //tools {
-        
-    //}
     
     stages {
         stage('Build') {
@@ -24,11 +21,11 @@ pipeline {
 
         stage('deploy') {
             steps {
-                echo 'deplying the application...'
-                //echo "deplying with ${SERVER_CREDENTIALS}"
-                //sh "${SERVER_CREDENTIALS}"
+                echo 'deploying the application...'
+                
+                // Corrected withCredentials block
                 withCredentials([
-                    usernamePassword(credentials: 'nexus-credentials', usernameVariable: USER, passwordVariable: PWD)
+                    usernamePassword(credentials: 'nexus-credentials', usernameVariable: 'USER', passwordVariable: 'PWD')
                 ]) {
                     sh "some script ${USER} ${PWD}"
                 }
