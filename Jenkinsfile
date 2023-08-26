@@ -1,14 +1,30 @@
+CODE_CHANGES = getGitChanges()
 pipeline {
     agent any
+    environment {
+        NEW_VERSION = '1.3.0'
+        SERVER_CREDENTIALS = credentials('nexus-credentials')
+    }
+    tools {
+        
+    }
+    
     stages {
         stage('Build') {
             steps {
                 echo 'building the application...'
+                echo "building version ${NEW_VERSION}"
             }
         }
 
         stage('test') {
             steps {
+                when {
+                    expression {
+                        // BRANCH_NAME == 'dev' || BRANCH_NAME == 'master'
+                        CODE_CHANGES == true && BRANCH_NAME == 'master'
+                    }
+                }
                 echo 'testing the application...'
             }
         }
@@ -16,7 +32,26 @@ pipeline {
         stage('deploy') {
             steps {
                 echo 'deplying the application...'
+                //echo "deplying with ${SERVER_CREDENTIALS}"
+                //sh "${SERVER_CREDENTIALS}"
+                withCredentials([
+                    usernamePassword(credentials: 'nexus-credentials', usernameVariable: USER, passwordVariable: PWD)
+                ]) {
+                    sh "some script ${USER} ${PWD}"
+                }
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'always...'
+        }
+        success {
+            echo 'success...'
+        }
+        failure {
+            echo 'failure...'
         }
     }
 }
