@@ -25,7 +25,9 @@ pipeline {
         
         stage('Compress Artifacts') {
             steps {
-                sh 'zip -r myapp.zip build/*'
+                script {
+                    archiveArtifacts allowEmptyArchive: true, artifacts: 'build/**'
+                }
             }
         }
 
