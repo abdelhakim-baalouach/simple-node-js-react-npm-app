@@ -30,9 +30,6 @@ pipeline {
                     
                     archiveArtifacts allowEmptyArchive: true, artifacts: 'dist/**', onlyIfSuccessful: true, fingerprint: true
                     archiveArtifacts artifacts: '**/*.log', allowEmptyArchive: true
-                    
-                    // Rename the generated zip file
-                    sh "mv archive.zip myapp_${uniqueIdentifier}.zip"
                 }
             }
         }
