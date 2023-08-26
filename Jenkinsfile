@@ -35,7 +35,7 @@ pipeline {
             steps {
                 script {
                     def zipFilePath = "${JENKINS_HOME}/workspace/${JOB_NAME}/archive.zip" // Adjust the path to the zip file
-                    def nexusApiUrl = "${NEXUS_REPO_URL}archive_${BUILD_NUMBER}.zip"
+                    def nexusApiUrl = "${NEXUS_REPO_URL}archive.zip"
 
                      sh "curl -v -u admin:Sys*6SFL** --upload-file ${zipFilePath} ${nexusApiUrl}"
                 }
