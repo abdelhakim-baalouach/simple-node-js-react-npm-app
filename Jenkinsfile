@@ -1,14 +1,8 @@
 pipeline {
-    agent {
-        label 'your-build-agent-label' // Use a specific build agent or 'any' for any available agent
-    }
+    agent any
     
     environment {
         SERVER_CREDENTIALS = credentials('nexus-credentials')
-    }
-
-    options {
-        buildDiscarder(logRotator(numToKeepStr: '10')) // Keep a limited number of build logs
     }
 
     stages {
