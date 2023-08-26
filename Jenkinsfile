@@ -22,8 +22,8 @@ pipeline {
         stage('deploy') {
             steps {
                 echo 'deploying the application...'
-                echo "deplying with ${SERVER_CREDENTIALS}"
-                // sh "${SERVER_CREDENTIALS}"
+                //echo "deplying with ${SERVER_CREDENTIALS}"
+                sh('cat $SERVER_CREDENTIALS_USR:$SERVER_CREDENTIALS_PSW')
                 
             }
         }
