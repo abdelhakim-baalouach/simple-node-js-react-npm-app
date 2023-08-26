@@ -25,7 +25,7 @@ pipeline {
         
         stage('Compress Artifacts') {
             steps {
-               dir('./dist') {
+               dir('./build') {
                 zip zipFile: '../my-artifacts.zip', archive: false
             }
             }
