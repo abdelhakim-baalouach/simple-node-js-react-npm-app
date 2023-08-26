@@ -1,21 +1,34 @@
 pipeline {
-    agent any
-    environment {
-        NEW_VERSION = '1.3.0'
-        SERVER_CREDENTIALS = credentials('nexus-credentials')
+    agent {
+        label 'your-build-agent-label' // Use a specific build agent or 'any' for any available agent
     }
     
+    environment {
+        SERVER_CREDENTIALS = credentials('nexus-credentials')
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10')) // Keep a limited number of build logs
+    }
+
     stages {
-        stage('Build') {
+        stage('Install Dependencies') {
             steps {
-                echo 'building the application...'
-                echo "building version ${NEW_VERSION}"
+                script {
+                    sh 'npm install'
+                }
             }
         }
 
-        stage('test') {
+        stage('Build') {
             steps {
-                echo 'testing the application...'
+                sh 'npm run build'
+            }
+        }
+        
+        stage('Compress Artifacts') {
+            steps {
+                sh 'zip -r myapp.zip dist/*'
             }
         }
 
@@ -26,18 +39,6 @@ pipeline {
                 sh('echo ${SERVER_CREDENTIALS_USR} ${SERVER_CREDENTIALS_PSW}')
                 
             }
-        }
-    }
-
-    post {
-        always {
-            echo 'always...'
-        }
-        success {
-            echo 'success...'
-        }
-        failure {
-            echo 'failure...'
         }
     }
 }
