@@ -2,24 +2,23 @@ pipeline {
     agent any
     
     environment {
+        NODE_VERSION = "14"
         SERVER_CREDENTIALS = credentials('nexus-credentials')
+    }
+
+    tools {
+        nodejs "NodeJS ${NODE_VERSION}"
     }
 
     stages {
         stage('Install Dependencies') {
             steps {
-                script {
-                    def nodeTool = tool name: "NodeJS 14", type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
-                    env.PATH = "${nodeTool}/bin:${env.PATH}"
-                    sh 'npm install'
-                }
+                sh 'npm install'
             }
         }
 
         stage('Build') {
             steps {
-                def nodeTool = tool name: "NodeJS 14", type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
-                env.PATH = "${nodeTool}/bin:${env.PATH}"
                 sh 'npm run build'
             }
         }
@@ -30,12 +29,13 @@ pipeline {
             }
         }
 
-        stage('deploy') {
+        stage('Deploy') {
             steps {
-                echo 'deploying the application...'
-                //echo "deplying with ${SERVER_CREDENTIALS}"
-                sh('echo ${SERVER_CREDENTIALS_USR} ${SERVER_CREDENTIALS_PSW}')
+                echo 'Deploying the application...'
+                echo "Deploying with ${SERVER_CREDENTIALS_USR}"
                 
+                // Perform your deployment steps using SERVER_CREDENTIALS
+                // Example: sh "deploy-script.sh ${SERVER_CREDENTIALS_USR} ${SERVER_CREDENTIALS_PSW}"
             }
         }
     }
