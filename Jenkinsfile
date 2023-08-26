@@ -31,14 +31,14 @@ pipeline {
             }
         }
 
-        stage('Deploy to Nexus') {
-            steps {
-                script {
-                    def zipFilePath = "${JENKINS_HOME}/workspace/${JOB_NAME}/archive.zip" // Adjust the path to the zip file
-                    def nexusApiUrl = "${NEXUS_REPO_URL}archive.zip"
+        script {
+            def zipFilePath = "${JENKINS_HOME}/workspace/${JOB_NAME}/archive.zip" // Adjust the path to the zip file
+                
+            def nexusApiUrl = "${NEXUS_REPO_URL}archive.zip"
 
-                     sh "curl -v -u admin:Sys*6SFL** --upload-file ${zipFilePath} ${nexusApiUrl}"
-                }
+            withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                sh("echo  ${NEXUS_USERNAME}:${NEXUS_PASSWORD}")
+                // sh "curl -v -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file ${zipFilePath} ${nexusApiUrl}"
             }
         }
     }
