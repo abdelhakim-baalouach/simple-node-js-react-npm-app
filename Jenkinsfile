@@ -9,6 +9,8 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
+                    def nodeTool = tool name: "NodeJS 14", type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                    env.PATH = "${nodeTool}/bin:${env.PATH}"
                     sh 'npm install'
                 }
             }
@@ -16,6 +18,8 @@ pipeline {
 
         stage('Build') {
             steps {
+                def nodeTool = tool name: "NodeJS 14", type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                env.PATH = "${nodeTool}/bin:${env.PATH}"
                 sh 'npm run build'
             }
         }
