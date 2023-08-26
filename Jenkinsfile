@@ -33,9 +33,6 @@ pipeline {
             steps {
                 echo 'Deploying the application...'
                 echo "Deploying with ${SERVER_CREDENTIALS_USR}"
-                
-                // Perform your deployment steps using SERVER_CREDENTIALS
-                // Example: sh "deploy-script.sh ${SERVER_CREDENTIALS_USR} ${SERVER_CREDENTIALS_PSW}"
             }
         }
     }
