@@ -30,6 +30,13 @@ pipeline {
                 }
             }
         }
+
+        stage('Debug Workspace Contents') {
+            steps {
+                sh 'ls -la /var/jenkins_home/workspace/demo/master/'
+            }
+        }
+
         stage('Deploy to Nexus') {
             steps {
                 script {
