@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         NODE_VERSION = "14"
-        NEXUS_REPO_URL = 'http://localhost:9000/repository/demo_CI_CD/'
+        NEXUS_REPO_URL = 'http://localhost:9000/repository/demo_ci_cd/'
     }
 
     tools {
