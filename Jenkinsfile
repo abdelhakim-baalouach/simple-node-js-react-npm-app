@@ -4,6 +4,9 @@ pipeline {
     environment {
         NODE_VERSION = "14"
         SERVER_CREDENTIALS = credentials('nexus-credentials')
+        NEXUS_REPO_URL = 'http://localhost:9000/repository/demo_CI_CD/'
+        NEXUS_USERNAME = "${SERVER_CREDENTIALS_USR}"
+        NEXUS_PASSWORD = "${SERVER_CREDENTIALS_PWD}"
     }
 
     tools {
@@ -34,10 +37,16 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+         stage('Deploy to Nexus') {
             steps {
-                echo 'Deploying the application...'
-                echo "Deploying with ${SERVER_CREDENTIALS_USR}"
+                script {
+                    def zipFilePath = "myapp_${BUILD_NUMBER}.zip" // Replace with the actual path to your zip file
+                    def nexusApiUrl = "${NEXUS_REPO_URL}/${zipFilePath}"
+
+                    withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                        sh "curl -v -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file ${zipFilePath} ${nexusApiUrl}"
+                    }
+                }
             }
         }
     }
