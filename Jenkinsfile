@@ -53,12 +53,13 @@ pipeline {
                 }
             }
             steps {
-                withCredentials([string(credentialsId: 'NEXUS_PASSWORD', variable: 'NEXUS_PASSWORD')]) {
-                    script {
-                        def zipFilePath = '/var/jenkins_home/workspace/demo/master/archive.zip'
-                        sh """
-                            curl -v -u admin:\$NEXUS_PASSWORD --upload-file ${zipFilePath} http://localhost:9000/repository/demo_ci_cd/
-                        """
+                script {
+                    def workspacePath = "${JENKINS_HOME}/workspace/demo/master"
+                    def zipFilePath = "${workspacePath}/archive.zip"
+        
+                    withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                        //sh "curl -v -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file ${zipFilePath} ${NEXUS_REPO_URL}"
+                        sh "curl -v -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file ${zipFilePath} ${NEXUS_REPO_URL}/"
                     }
                 }
             }
