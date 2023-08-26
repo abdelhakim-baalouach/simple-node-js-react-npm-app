@@ -22,13 +22,9 @@ pipeline {
         stage('deploy') {
             steps {
                 echo 'deploying the application...'
+                echo "deplying with ${SERVER_CREDENTIALS}"
+                sh "${SERVER_CREDENTIALS}"
                 
-                // Corrected withCredentials block
-                withCredentials([
-                    usernamePassword(credentials: 'nexus-credentials', usernameVariable: 'USER', passwordVariable: 'PWD')
-                ]) {
-                    sh "some script $USER $PWD"
-                }
             }
         }
     }
