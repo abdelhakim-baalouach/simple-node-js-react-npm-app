@@ -23,13 +23,13 @@ pipeline {
             }
         }
         
-        //stage('Compress Artifacts') {
-          //  steps {
-            //    script {
-              //      archiveArtifacts allowEmptyArchive: true, artifacts: 'dist/**'
-                //}
-            //}
-        //}
+        stage('Compress Artifacts') {
+            steps {
+                script {
+                    archiveArtifacts allowEmptyArchive: true, artifacts: 'build/**'
+                }
+            }
+        }
 
         stage('Deploy to Nexus') {
             steps {
@@ -39,7 +39,7 @@ pipeline {
         
                     withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
                         //sh "curl -v -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file ${zipFilePath} ${NEXUS_REPO_URL}"
-                        sh "curl -v -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file build/* ${NEXUS_REPO_URL}/"
+                        sh "curl -v -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file $[zipFilePath} ${NEXUS_REPO_URL}/"
                     }
                 }
             }
