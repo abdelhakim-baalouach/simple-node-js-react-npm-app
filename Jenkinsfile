@@ -26,7 +26,13 @@ pipeline {
         stage('Compress Artifacts') {
             steps {
                 script {
-                    archiveArtifacts allowEmptyArchive: true, artifacts: 'build/**'
+                    def uniqueIdentifier = env.BUILD_NUMBER // Use BUILD_NUMBER or another unique identifier
+                    
+                    archiveArtifacts allowEmptyArchive: true, artifacts: 'dist/**', onlyIfSuccessful: true, fingerprint: true
+                    archiveArtifacts artifacts: '**/*.log', allowEmptyArchive: true
+                    
+                    // Rename the generated zip file
+                    sh "mv archive.zip myapp_${uniqueIdentifier}.zip"
                 }
             }
         }
