@@ -3,10 +3,7 @@ pipeline {
     
     environment {
         NODE_VERSION = "14"
-        SERVER_CREDENTIALS = credentials('nexus-credentials')
-        NEXUS_REPO_URL = 'http://localhost:9000/repository/demo_CI_CD/'
-        NEXUS_USERNAME = "${SERVER_CREDENTIALS_USR}"
-        NEXUS_PASSWORD = "${SERVER_CREDENTIALS_PWD}"
+        NEXUS_REPO_URL = 'https://localhost:9000/repository/demo_CI_CD/'
     }
 
     tools {
@@ -34,11 +31,11 @@ pipeline {
             }
         }
 
-         stage('Deploy to Nexus') {
+        stage('Deploy to Nexus') {
             steps {
                 script {
-                    def zipFilePath = "archive.zip" // Replace with the actual path to your zip file
-                    def nexusApiUrl = "${NEXUS_REPO_URL}/${zipFilePath}"
+                    def zipFilePath = "${JENKINS_HOME}/workspace/${JOB_NAME}/archive.zip" // Adjust the path to the zip file
+                    def nexusApiUrl = "${NEXUS_REPO_URL}archive_${BUILD_NUMBER}.zip"
 
                     withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
                         sh "curl -v -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file ${zipFilePath} ${nexusApiUrl}"
