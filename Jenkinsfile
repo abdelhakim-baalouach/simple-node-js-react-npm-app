@@ -37,9 +37,7 @@ pipeline {
                     def zipFilePath = "${JENKINS_HOME}/workspace/${JOB_NAME}/archive.zip" // Adjust the path to the zip file
                     def nexusApiUrl = "${NEXUS_REPO_URL}archive_${BUILD_NUMBER}.zip"
 
-                    withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                        sh "curl -v -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file ${zipFilePath} ${nexusApiUrl}"
-                    }
+                     sh "curl -v -u admin:Sys*6SFL** --upload-file ${zipFilePath} ${nexusApiUrl}"
                 }
             }
         }
