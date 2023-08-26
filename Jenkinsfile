@@ -27,7 +27,7 @@ pipeline {
                 withCredentials([
                     usernamePassword(credentials: 'nexus-credentials', usernameVariable: 'USER', passwordVariable: 'PWD')
                 ]) {
-                    sh "some script ${USER} ${PWD}"
+                    sh "some script $USER $PWD"
                 }
             }
         }
