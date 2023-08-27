@@ -2,12 +2,7 @@ pipeline {
     agent any
 
     environment {
-        NODE_VERSION = "14"
         NEXUS_REPO_URL = 'http://localhost:9000/repository/demo_ci_cd/'
-    }
-
-    tools {
-        nodejs "NodeJS ${NODE_VERSION}"
     }
 
     stages {
