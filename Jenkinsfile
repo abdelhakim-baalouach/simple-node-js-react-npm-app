@@ -32,9 +32,9 @@ pipeline {
         }
 
         stage('Deploy to Nexus') {
-            steps { // This was missing
+            steps {
                 script {
-                    def zipFilePath = '/var/jenkins_home/workspace/demo/master/archive.zip'
+                    def zipFilePath = "${JENKINS_HOME}/workspace/demo/master/archive.zip"
                     if (fileExists(zipFilePath)) {
                         echo "ZIP file exists"
                         currentBuild.result = 'SUCCESS'
@@ -65,8 +65,7 @@ pipeline {
     }
 }
 
-// Function to check if a file exists
+// Function to check if a file exists using the fileExists step
 def fileExists(filePath) {
-    def file = new File(filePath)
-    return file.exists()
+    return step([$class: 'FileExists', file: filePath])
 }
