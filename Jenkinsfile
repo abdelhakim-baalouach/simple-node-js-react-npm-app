@@ -34,8 +34,9 @@ pipeline {
         stage('check if ZIP file exists') {
             steps {
                 script {
-                    def zipFilePath = "${JENKINS_HOME}/workspace/demo/master/archive.zip"
-                    if (fileExists(zipFilePath)) {
+                    def filePath = "${JENKINS_HOME}/workspace/demo/master/archive.zip"
+                    def file = new File(filePath)
+                    if (file.exists()) {
                         echo "ZIP file exists"
                         currentBuild.result = 'SUCCESS'
                     } else {
@@ -62,10 +63,4 @@ pipeline {
         }
 
     }
-}
-
-// Function to check if a file exists using the fileExists step
-def fileExists(filePath) {
-    def file = new File(filePath)
-    return file.exists()
 }
