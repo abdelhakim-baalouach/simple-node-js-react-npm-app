@@ -11,23 +11,11 @@ pipeline {
     }
 
     stages {
-        stage('Install Dependencies') {
-            steps {
-                sh 'npm install'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                sh 'npm run build'
-            }
-        }
-
         stage('Deploy to Nexus repository') {
             steps {
                 script {
                     def workspacePath = "${JENKINS_HOME}/workspace/demo_master/"
-                    def zipFilePath = "${workspacePath}/build/"
+                    def zipFilePath = "${workspacePath}/build.zip"
 
                     withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
                         sh "curl -v -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file ${zipFilePath} ${NEXUS_REPO_URL}/"
