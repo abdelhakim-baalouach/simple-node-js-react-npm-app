@@ -33,40 +33,40 @@ pipeline {
 
         stage('Deploy to Nexus') {
             stage('Check ZIP File Existence') {
-            steps {
-                script {
-                    def zipFilePath = '/var/jenkins_home/workspace/demo/master/archive.zip'
-                    if (fileExists(zipFilePath)) {
-                        echo "ZIP file exists"
-                        currentBuild.result = 'SUCCESS'
-                    } else {
-                        error "ZIP file does not exist"
+                steps {
+                    script {
+                        def zipFilePath = '/var/jenkins_home/workspace/demo/master/archive.zip'
+                        if (fileExists(zipFilePath)) {
+                            echo "ZIP file exists"
+                            currentBuild.result = 'SUCCESS'
+                        } else {
+                            error "ZIP file does not exist"
+                        }
                     }
                 }
             }
-        }
 
-        stage('Upload ZIP File') {
-            when {
-                expression {
-                    return currentBuild.resultIsBetterOrEqualTo('SUCCESS')
+            stage('Upload ZIP File') {
+                when {
+                    expression {
+                        return currentBuild.resultIsBetterOrEqualTo('SUCCESS')
+                    }
                 }
-            }
-            steps {
-                script {
-                    def workspacePath = "${JENKINS_HOME}/workspace/demo/master"
-                    def zipFilePath = "${workspacePath}/archive.zip"
-        
-                    withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                        //sh "curl -v -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file ${zipFilePath} ${NEXUS_REPO_URL}"
-                        sh "curl -v -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file ${zipFilePath} ${NEXUS_REPO_URL}/"
+                steps {
+                    script {
+                        def workspacePath = "${JENKINS_HOME}/workspace/demo/master"
+                        def zipFilePath = "${workspacePath}/archive.zip"
+            
+                        withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                            sh "curl -v -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file ${zipFilePath} ${NEXUS_REPO_URL}/"
+                        }
                     }
                 }
             }
         }
     }
-        
 }
+
 // Function to check if a file exists
 def fileExists(filePath) {
     def file = new File(filePath)
