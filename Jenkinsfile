@@ -65,7 +65,7 @@ pipeline {
 }
 
 // Function to check if a file exists using the fileExists step
-def fileExists(String filePath) {
+def fileExists(filePath) {
     def file = new File(filePath)
     return file.exists()
 }
