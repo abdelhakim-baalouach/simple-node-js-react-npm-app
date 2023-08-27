@@ -23,25 +23,17 @@ pipeline {
             }
         }
 
-        stage('Compress Artifacts') {
+        stage('Deploy to Nexus repository') {
             steps {
                 script {
-                    def zipFileName = "artifacts.zip"
-                    def zipFilePath = "${JENKINS_HOME}/workspace/demo_master/${zipFileName}"
+                    def workspacePath = "${JENKINS_HOME}/workspace/demo_master/"
+                    def zipFilePath = "${workspacePath}/build/"
 
-                    // Compress the artifacts into a ZIP file
-                    sh "zip -r ${zipFilePath} build/*"
-
-                    // Archive the ZIP file as an artifact
-                    archiveArtifacts artifacts: "${zipFilePath}", allowEmptyArchive: true
-
-                    // Set a variable for the ZIP file URL
-                    def zipFileUrl = "${env.BUILD_URL}artifact/${zipFileName}"
-
-                    echo "ZIP file URL: ${zipFileUrl}"
+                    withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                        sh "curl -v -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file ${zipFilePath} ${NEXUS_REPO_URL}/"
+                    }
                 }
             }
         }
-
     }
 }
