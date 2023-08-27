@@ -1,9 +1,3 @@
-@NonCPS
-def checkFileExists(filePath) {
-    def file = new File(filePath)
-    return file.exists()
-}
-
 pipeline {
     agent any
     environment {
@@ -19,7 +13,7 @@ pipeline {
             steps {
                 script {
                     def filePath = "${JENKINS_HOME}/workspace/demo/master/archive.zip"
-                    def fileExists = checkFileExists(filePath)
+                    def fileExists = sh(script: "if [ -f ${filePath} ]; then echo 'true'; else echo 'false'; fi", returnStatus: true).trim() == 'true'
 
                     if (fileExists) {
                         echo "File exists"
