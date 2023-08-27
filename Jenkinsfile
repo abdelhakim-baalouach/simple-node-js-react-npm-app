@@ -31,7 +31,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to Nexus') {
+        stage('check if ZIP file exists') {
             steps {
                 script {
                     def zipFilePath = "${JENKINS_HOME}/workspace/demo/master/archive.zip"
@@ -44,28 +44,28 @@ pipeline {
                 }
             }
         }
-        
-        stage('Upload ZIP File') {
+
+        stage('Deploy to Nexus repository') {
             when {
-                expression {
-                    return currentBuild.resultIsBetterOrEqualTo('SUCCESS')
-                }
+                expression { return currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
             steps {
                 script {
                     def workspacePath = "${JENKINS_HOME}/workspace/demo/master"
                     def zipFilePath = "${workspacePath}/archive.zip"
-        
+
                     withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
                         sh "curl -v -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file ${zipFilePath} ${NEXUS_REPO_URL}/"
                     }
                 }
             }
         }
+
     }
 }
 
 // Function to check if a file exists using the fileExists step
-def fileExists(filePath) {
-    return step([$class: 'FileExists', file: filePath])
+def fileExists(String filePath) {
+    def file = new File(filePath)
+    return file.exists()
 }
