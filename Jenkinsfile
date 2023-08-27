@@ -27,7 +27,7 @@ pipeline {
             steps {
                 script {
                     def zipFileName = "artifacts.zip"
-                    def zipFilePath = "${WORKSPACE_PATH}/master/${zipFileName}"
+                    def zipFilePath = "${JENKINS_HOME}/workspace/demo_master/${zipFileName}"
 
                     // Compress the artifacts into a ZIP file
                     sh "zip -r ${zipFilePath} build/*"
